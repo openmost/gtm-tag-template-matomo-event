@@ -15,5 +15,5 @@
 homepage: "https://openmost.io"
 documentation: "https://github.com/openmost/gtm-tag-template-matomo-event"
 versions:
-  - sha: 5f02a788b90ae804f86b04aa24af8937e567874a
+  - sha: 045a86ff6c1e5a916188f0419475924c97950702
     changeNotes: Initial Version
