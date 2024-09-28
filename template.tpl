@@ -51,8 +51,39 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "eventValue",
-    "displayName": "Event value",
-    "simpleValueType": true
+    "displayName": "Event value (optional)",
+    "simpleValueType": true,
+    "valueValidators": []
+  },
+  {
+    "type": "PARAM_TABLE",
+    "name": "customDimensions",
+    "displayName": "Custom dimensions (optional)",
+    "paramTableColumns": [
+      {
+        "param": {
+          "type": "TEXT",
+          "name": "dimensionId",
+          "displayName": "Dimension ID",
+          "simpleValueType": true,
+          "valueValidators": [
+            {
+              "type": "POSITIVE_NUMBER"
+            }
+          ]
+        },
+        "isUnique": true
+      },
+      {
+        "param": {
+          "type": "TEXT",
+          "name": "dimensionValue",
+          "displayName": "Dimension value",
+          "simpleValueType": true
+        },
+        "isUnique": false
+      }
+    ]
   }
 ]
 
@@ -61,8 +92,17 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 // Saisissez le code de votre modèle ici.
 const createQueue = require('createQueue');
+const Object = require('Object');
+const logToConsole = require('logToConsole');
 var _paqPush = createQueue('_paq');
-_paqPush(['trackEvent', data.eventCategory, data.eventAction, data.eventName, data.eventValue]);
+
+// Préparation des dimensions
+let dimensions = {};
+if(data.customDimensions){
+Object.values(data.customDimensions).forEach((d, index) => dimensions['dimension'+d.dimensionId] = d.dimensionValue);
+}
+
+_paqPush(['trackEvent', data.eventCategory, data.eventAction, data.eventName, data.eventValue, dimensions]);
 
 // Appelez data.gtmOnSuccess une fois la balise terminée.
 data.gtmOnSuccess();
@@ -131,6 +171,24 @@ ___WEB_PERMISSIONS___
       "isEditedByUser": true
     },
     "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "logging",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "environments",
+          "value": {
+            "type": 1,
+            "string": "debug"
+          }
+        }
+      ]
+    },
+    "isRequired": true
   }
 ]
 
@@ -142,6 +200,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 18/01/2024 19:21:51
+Created on 28/09/2024 18:38:34
 
 

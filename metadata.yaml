@@ -17,3 +17,5 @@ documentation: "https://github.com/openmost/gtm-tag-template-matomo-event"
 versions:
   - sha: 045a86ff6c1e5a916188f0419475924c97950702
     changeNotes: Initial Version
+  - sha: 045a86ff6c1e5a916188f0419475924c97950702
+    changeNotes: Add custom dimension support
