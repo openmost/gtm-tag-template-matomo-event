@@ -93,12 +93,20 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 // Saisissez le code de votre modèle ici.
 const createQueue = require('createQueue');
 const Object = require('Object');
+const getType = require('getType');
 var _paqPush = createQueue('_paq');
 
 // Préparation des dimensions
+// Les valeurs vides sont ignorées : matomo.js enverrait "undefined" ou "" et Matomo les enregistrerait
 let dimensions = {};
 if(data.customDimensions){
-Object.values(data.customDimensions).forEach((d, index) => dimensions['dimension'+d.dimensionId] = d.dimensionValue);
+Object.values(data.customDimensions).forEach((d, index) => {
+  const type = getType(d.dimensionValue);
+  if (type === 'undefined' || type === 'null' || d.dimensionValue === '') {
+    return;
+  }
+  dimensions['dimension'+d.dimensionId] = d.dimensionValue;
+});
 }
 
 _paqPush(['trackEvent', data.eventCategory, data.eventAction, data.eventName, data.eventValue, dimensions]);
